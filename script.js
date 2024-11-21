@@ -4,7 +4,6 @@ function calculateIntegral() {
 
     try {
         if (expression && variable) {
-            // Use Nerdamer to calculate the integral
             const integral = nerdamer(`integrate(${expression}, ${variable})`).toString();
             document.getElementById("result").innerHTML = `The integral of ${expression} with respect to ${variable} is: ${integral}`;
         } else {
