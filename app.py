@@ -15,11 +15,10 @@ def solve():
     variable = data.get('variable', 'x')
 
     try:
-        # Parse LaTeX input into a SymPy expression
         x = symbols(variable)
         expression = parse_latex(latex_expression)
         result = integrate(expression, x)
-        latex_result = latex(result)  # Convert result to LaTeX
+        latex_result = latex(result)  
         return jsonify({'result': latex_result})
     except Exception as e:
         return jsonify({'error': str(e)})
