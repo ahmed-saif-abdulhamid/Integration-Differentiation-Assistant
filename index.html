@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration and Differentiation Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/MathJax/3.2.2/es5/tex-mml-chtml.js" integrity="sha512-nOgF8x6KcsyDKCXDp+kwL2uCg3ff/nlv6EmICZGfdltBZfPzP+E5bdW9ps7apT1KQoExAfNRAzBYPnpEZBYUuw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nerdamer/1.1.11/nerdamer.core.min.js" integrity="sha512-OPzHj2kgDW7SaMh1WZ8IE3HsZeQxmPv7uY0TP6gEecNqMhVRHBG7s9NjaHcErjyj21MLrWqP2A2mYb5bp7rPZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nerdamer/1.1.11/Algebra.min.js" integrity="sha512-ef2hUXW5b2g43H9KPr7PfNB6ZCz1TpZTlEJ62X26w2nZ1I8/WTrCz5gGzoS6lh5BW60ciTxmL/d5Nq5vcsckHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nerdamer/1.1.11/Calculus.min.js" integrity="sha512-dlhjEAhVDyrEYJSyBG/BbuOd0ZKNHLU3wv0dHQHg6/Ji+Ioax8YJSkeH6Ac+8H4ztzU5K9tFbd9T1bWcprvZYg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+        .container:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #2575fc;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+        }
+        textarea, input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #2575fc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background: #6a11cb;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            background: #4e0ca3;
+        }
+        .result {
+            margin-top: 30px;
+            font-size: 20px;
+            color: #2575fc;
+        }
+        .placeholder-latex {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #444;
+        }
+        .icon {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 6em;
+            color: rgba(255, 255, 255, 0.2);
+            transform: rotate(-10deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="icon">&#x222B;</div>
+    <div class="container">
+        <h1>Integration & Differentiation Calculator</h1>
+        <textarea id="expression" placeholder="Enter expression (e.g., x^2)"></textarea>
+        <div class="placeholder-latex" id="expression-latex">Preview: \(x^2\)</div>
+        <input type="text" id="variable" placeholder="Enter variable (e.g., x)">
+        <div class="placeholder-latex" id="variable-latex">Variable: \(x\)</div>
+        <button id="integrate-button">Integrate</button>
+        <button id="differentiate-button">Differentiate</button>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        // Dynamic LaTeX preview for input fields
+        const expressionField = document.getElementById('expression');
+        const variableField = document.getElementById('variable');
+        const expressionLatex = document.getElementById('expression-latex');
+        const variableLatex = document.getElementById('variable-latex');
+        const integrateButton = document.getElementById('integrate-button');
+        const differentiateButton = document.getElementById('differentiate-button');
+
+        expressionField.addEventListener('input', function () {
+            // Update LaTeX placeholder dynamically as user types
+            expressionLatex.innerHTML = `Preview: \(${this.value || 'x^2'}\)`;
+            MathJax.typesetPromise();
+        });
+
+        variableField.addEventListener('input', function () {
+            // Update LaTeX placeholder dynamically as user types
+            variableLatex.innerHTML = `Variable: \(${this.value || 'x'}\)`;
+            MathJax.typesetPromise();
+        });
+
+        integrateButton.addEventListener('click', function () {
+            calculate('integrate');
+        });
+
+        differentiateButton.addEventListener('click', function () {
+            calculate('differentiate');
+        });
+
+        function calculate(action) {
+            const expression = expressionField.value || 'x^2'; // Default example
+            const variable = variableField.value || 'x'; // Default variable
+            const resultDiv = document.getElementById('result');
+
+            try {
+                if (expression && variable) {
+                    let result;
+                    if (action === 'integrate') {
+                        result = nerdamer(`integrate(${expression}, ${variable})`).toString();
+                    } else if (action === 'differentiate') {
+                        result = nerdamer(`diff(${expression}, ${variable})`).toString();
+                    }
+                    resultDiv.innerHTML = `<strong>Result:</strong> \[${result}\]`;
+                    MathJax.typesetPromise(); // Trigger MathJax rendering for LaTeX
+                } else {
+                    resultDiv.innerHTML = "<strong>Error:</strong> Please enter both an expression and a variable.";
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
