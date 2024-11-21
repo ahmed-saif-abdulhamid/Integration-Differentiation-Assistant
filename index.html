@@ -94,9 +94,7 @@
         <button id="differentiate-button">Differentiate</button>
         <div class="result" id="result"></div>
     </div>
-    <script>
-        // Dynamic LaTeX preview for input fields
-        const expressionField = document.getElementById('expression');
+    <script>        const expressionField = document.getElementById('expression');
         const variableField = document.getElementById('variable');
         const expressionLatex = document.getElementById('expression-latex');
         const variableLatex = document.getElementById('variable-latex');
@@ -104,13 +102,11 @@
         const differentiateButton = document.getElementById('differentiate-button');
 
         expressionField.addEventListener('input', function () {
-            // Update LaTeX placeholder dynamically as user types
             expressionLatex.innerHTML = `Preview: \(${this.value || 'x^2'}\)`;
             MathJax.typesetPromise();
         });
 
         variableField.addEventListener('input', function () {
-            // Update LaTeX placeholder dynamically as user types
             variableLatex.innerHTML = `Variable: \(${this.value || 'x'}\)`;
             MathJax.typesetPromise();
         });
@@ -124,8 +120,8 @@
         });
 
         function calculate(action) {
-            const expression = expressionField.value || 'x^2'; // Default example
-            const variable = variableField.value || 'x'; // Default variable
+            const expression = expressionField.value || 'x^2'; 
+            const variable = variableField.value || 'x'; 
             const resultDiv = document.getElementById('result');
 
             try {
@@ -137,7 +133,7 @@
                         result = nerdamer(`diff(${expression}, ${variable})`).toString();
                     }
                     resultDiv.innerHTML = `<strong>Result:</strong> \[${result}\]`;
-                    MathJax.typesetPromise(); // Trigger MathJax rendering for LaTeX
+                    MathJax.typesetPromise(); 
                 } else {
                     resultDiv.innerHTML = "<strong>Error:</strong> Please enter both an expression and a variable.";
                 }
